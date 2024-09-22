@@ -125,28 +125,26 @@ Class Master extends DBConnection {
 
 	}
 	function save_archive() {
-		error_log("save_archive function started"); // Debug line
-	
+		error_log("save_archive function started");
+		
 		if (isset($_POST['members'])) {
 			$_POST['members'] = htmlentities($_POST['members']);
 		}
 	
 		$_POST['submitted_by'] = $this->settings->userdata('firstname') . " " . $this->settings->userdata('lastname');
-	
+		
 		extract($_POST);
 		$data = "";
 	
 		// Validate abstract PDF file
 		if (isset($_FILES['abstract_pdf']) && !empty($_FILES['abstract_pdf']['tmp_name'])) {
-			error_log("Abstract file found"); // Debug line
+			error_log("Abstract file found");
 			$type = mime_content_type($_FILES['abstract_pdf']['tmp_name']);
 			if ($type != "application/pdf") {
 				$resp['status'] = "failed";
 				$resp['msg'] = "Invalid Abstract PDF File Type.";
 				return json_encode($resp);
 			}
-		} else {
-			error_log("Abstract file not found"); // Debug line
 		}
 	
 		// Validate document PDF file
@@ -185,6 +183,8 @@ Class Master extends DBConnection {
 			$sql = "UPDATE `archive_list` SET {$data} WHERE id = '{$id}' ";
 		}
 	
+		error_log("Executing SQL: " . $sql);  // Debug SQL Query
+	
 		$save = $this->conn->query($sql);
 		if ($save) {
 			$aid = !empty($id) ? $id : $this->conn->insert_id;
@@ -192,10 +192,10 @@ Class Master extends DBConnection {
 			$resp['id'] = $aid;
 			$resp['msg'] = empty($id) ? "Archive was successfully submitted" : "Archive details were updated successfully.";
 	
-			// Handle abstract PDF upload
+			// Process abstract PDF file
 			if (isset($_FILES['abstract_pdf']) && $_FILES['abstract_pdf']['tmp_name'] != '') {
-				error_log("Processing abstract PDF upload"); // Debug line
-				$fname = 'uploads/abstracts/abstract-'.$aid.'.pdf';
+				error_log("Processing abstract PDF upload");
+				$fname = 'uploads/abstracts/abstract-' . $aid . '.pdf';
 				$dir_path = base_app . $fname;
 				$upload = $_FILES['abstract_pdf']['tmp_name'];
 				$type = mime_content_type($upload);
@@ -205,17 +205,17 @@ Class Master extends DBConnection {
 				} else {
 					$uploaded = move_uploaded_file($upload, $dir_path);
 					if ($uploaded) {
-						error_log("Abstract PDF uploaded successfully"); // Debug line
+						error_log("Abstract PDF uploaded successfully");
 						$this->conn->query("UPDATE archive_list SET `abstract` = CONCAT('{$fname}', '?v=', unix_timestamp(CURRENT_TIMESTAMP)) WHERE id = '{$aid}' ");
 					} else {
-						error_log("Failed to upload abstract PDF"); // Debug line
+						error_log("Failed to upload abstract PDF");
 					}
 				}
 			}
 	
-			// Handle document PDF upload
+			// Process document PDF file
 			if (isset($_FILES['document_pdf']) && $_FILES['document_pdf']['tmp_name'] != '') {
-				$fname = 'uploads/pdf/document-'.$aid.'.pdf';
+				$fname = 'uploads/pdf/document-' . $aid . '.pdf';
 				$dir_path = base_app . $fname;
 				$upload = $_FILES['document_pdf']['tmp_name'];
 				$type = mime_content_type($upload);
@@ -231,19 +231,21 @@ Class Master extends DBConnection {
 			}
 	
 		} else {
-			$resp['status'] = 'failed';
+			$resp['status'] = 'failed'; 
 			$resp['msg'] = "An error occurred.";
 			$resp['err'] = $this->conn->error . "[{$sql}]";
+			error_log("SQL Error: " . $this->conn->error . "[{$sql}]");  // Log SQL error for better debugging
 		}
 	
 		if ($resp['status'] == 'success') {
 			$this->settings->set_flashdata('success', $resp['msg']);
 		}
 	
-		error_log("save_archive function ended"); // Debug line
+		error_log("save_archive function ended");
 	
 		return json_encode($resp);
 	}
+	
 	
 	
 	function delete_archive(){

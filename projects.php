@@ -64,6 +64,34 @@ $submitted = $fname . " " . $lname;
                         ?>
                     </ul>
                 </li>
+                <li class="nav-item dropdown">
+                    <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle <?= isset($page) && $page == 'projects_per_type' ? 'active' : '' ?>" style="color: black; font-weight: 500;">Research Type</a>
+                    <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow droppy">
+                        <?php 
+                        $curriculums = $conn->query("SELECT * FROM research_type ORDER BY `type` ASC");
+                        while($row = $curriculums->fetch_assoc()):
+                        ?>
+                        <li><a href="./?page=projects_per_type&id=<?= $row['id'] ?>" class="dropdown-item"><?= ucwords($row['type']) ?></a></li>
+                        <?php if($curriculums->num_rows > 1): ?>
+                        <li class="dropdown-divider"></li>
+                        <?php endif; ?>
+                        <?php endwhile; ?>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle <?= isset($page) && $page == 'projects_per_style' ? 'active' : '' ?>" style="color: black; font-weight: 500;">Reference Style</a>
+                    <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow droppy">
+                        <?php 
+                        $curriculums = $conn->query("SELECT * FROM reference_style ORDER BY `style` ASC");
+                        while($row = $curriculums->fetch_assoc()):
+                        ?>
+                        <li><a href="./?page=projects_per_style&id=<?= $row['id'] ?>" class="dropdown-item"><?= ucwords($row['style']) ?></a></li>
+                        <?php if($curriculums->num_rows > 1): ?>
+                        <li class="dropdown-divider"></li>
+                        <?php endif; ?>
+                        <?php endwhile; ?>
+                    </ul>
+                </li>
             </ul>
         </div>
         <div class="col-md-4 col-sm-12">

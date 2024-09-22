@@ -13,9 +13,10 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 if(isset($_GET['id']) && $_GET['id'] > 0){
     $qry = $conn->query("SELECT a.* FROM `archive_list` a where a.id = '{$_GET['id']}'");
     if($qry->num_rows){
-        $row = $qry->fetch_assoc(); // Fetch the row as an associative array
-        $act_year = $row['year']; // Assign year from the fetched data
-        // Assign other variables if needed
+        $row = $qry->fetch_assoc();
+        $act_year = $row['year'];
+        $type = $row['type'];
+        $style = $row['style'];
     }
 }
 ?>
@@ -94,6 +95,34 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                         ?>
                     </ul>
                 </li>
+                <li class="nav-item dropdown">
+                    <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle <?= isset($page) && $page == 'projects_per_type' ? 'active' : '' ?>" style="color: black; font-weight: 500;">Research Type</a>
+                    <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow droppy">
+                        <?php 
+                        $curriculums = $conn->query("SELECT * FROM research_type ORDER BY `type` ASC");
+                        while($row = $curriculums->fetch_assoc()):
+                        ?>
+                        <li><a href="./?page=projects_per_type&id=<?= $row['id'] ?>" class="dropdown-item"><?= ucwords($row['type']) ?></a></li>
+                        <?php if($curriculums->num_rows > 1): ?>
+                        <li class="dropdown-divider"></li>
+                        <?php endif; ?>
+                        <?php endwhile; ?>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle <?= isset($page) && $page == 'projects_per_style' ? 'active' : '' ?>" style="color: black; font-weight: 500;">Reference Style</a>
+                    <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow droppy">
+                        <?php 
+                        $curriculums = $conn->query("SELECT * FROM reference_style ORDER BY `style` ASC");
+                        while($row = $curriculums->fetch_assoc()):
+                        ?>
+                        <li><a href="./?page=projects_per_style&id=<?= $row['id'] ?>" class="dropdown-item"><?= ucwords($row['style']) ?></a></li>
+                        <?php if($curriculums->num_rows > 1): ?>
+                        <li class="dropdown-divider"></li>
+                        <?php endif; ?>
+                        <?php endwhile; ?>
+                    </ul>
+                </li>
             </ul>
         </div>
         <div class="col-md-4 col-sm-12">
@@ -165,6 +194,16 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                     <!-- <center>
                         <img src="<?= validate_image(isset($banner_path) ? $banner_path : "") ?>" alt="Banner Image" id="banner-img" class="img-fluid border bg-gradient-dark">
                     </center> -->
+                    <fieldset>
+                        <legend class="text-navy">Research Type:</legend>
+                        <div class="pl-4"><large><?= isset($type) ? htmlspecialchars($type) : "----" ?></large></div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend class="text-navy">Reference Style:</legend>
+                        <div class="pl-4"><large><?= isset($style) ? htmlspecialchars($style) : "----" ?></large></div>
+                    </fieldset>
+
                     <fieldset>
                         <legend class="text-navy">Project Year:</legend>
                         <div class="pl-4"><large><?= isset($act_year) ? htmlspecialchars($act_year) : "----" ?></large></div>

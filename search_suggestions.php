@@ -14,7 +14,7 @@ if ($searchQuery !== '') {
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             echo '<li class="list-group-item suggestion-item text-sm" data-title="' . htmlspecialchars($row['title']) . '">' 
-                . htmlspecialchars($row['title']) . ' (Search popularity: ' . $row['search_count'] . ')</li>';
+                . htmlspecialchars($row['title']) . '<p class="text-primary">Search popularity: ' . $row['search_count'] . '</p></li>';
             $ids[] = $row['id'];
         }
         $_SESSION['search_query'] = $searchQuery;

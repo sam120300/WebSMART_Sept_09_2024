@@ -125,31 +125,36 @@
 </script>
 
 
-<div class="row mt-5 g-5">
+<div class="row w-50 mt-5 g-2">
     <?php if ($_settings->userdata('id') > 0): ?>
-        <!-- User is logged in: Show 3 items per row -->
-        <a href="?page=projects" class="col-6 col-sm-6 col-md-3 navbtn btn btn-transparent text-light font-weight-bold">
+        <a href="?page=projects" class="col-6 col-sm-6 col-md-3 navbtn btn btn-transparent text-light font-weight-bold" data-bs-toggle="tooltip" title="Explore all projects from different fields">
             <img src="uploads/open-book.png" alt="" style="width: 75px;"><br>PROJECTS
         </a>
-        <a href="?page=forms" class="col-6 col-sm-6 col-md-3 navbtn btn btn-transparent text-light font-weight-bold">
+        <a href="?page=forms" class="col-6 col-sm-6 col-md-3 navbtn btn btn-transparent text-light font-weight-bold" data-bs-toggle="tooltip" title="Browse all available forms">
             <img src="uploads/form.png" alt="" style="width: 75px;"><br>FORMS
         </a>
-        <a href="?page=about" class="col-6 col-sm-6 col-md-3 navbtn btn btn-transparent text-light font-weight-bold">
+        <a href="?page=about" class="col-6 col-sm-6 col-md-3 navbtn btn btn-transparent text-light font-weight-bold" data-bs-toggle="tooltip" title="Find out more about us and what we do">
             <img src="uploads/question-mark.png" alt="" style="width: 75px;"><br>ABOUT&nbspUS
         </a>
-        <a href="?page=submit-archive" class="col-6 col-sm-6 col-md-3 navbtn btn btn-transparent text-light font-weight-bold">
+        <a href="?page=submit-archive" class="col-6 col-sm-6 col-md-3 navbtn btn btn-transparent text-light font-weight-bold" data-bs-toggle="tooltip" title="Submit documents or project archives">
             <img src="uploads/file.png" alt="" style="width: 75px;"><br>SUBMIT
         </a>
     <?php else: ?>
-        <!-- User is not logged in: Show 2 items per row -->
-        <a href="?page=projects" class="col-6 col-sm-6 navbtn btn btn-transparent text-light font-weight-bold">
+        <a href="?page=projects" class="col-6 col-sm-6 navbtn btn btn-transparent text-light font-weight-bold" data-bs-toggle="tooltip" title="Explore all projects from different fields">
             <img src="uploads/open-book.png" alt="" style="width: 75px;"><br>PROJECTS
         </a>
-        <a href="?page=about" class="col-6 col-sm-6 navbtn btn btn-transparent text-light font-weight-bold">
+        <a href="?page=about" class="col-6 col-sm-6 navbtn btn btn-transparent text-light font-weight-bold" data-bs-toggle="tooltip" title="Find out more about us and what we do">
             <img src="uploads/question-mark.png" alt="" style="width: 75px;"><br>ABOUT&nbspUS
         </a>
     <?php endif; ?>
 </div>
+<script>
+    // Initialize all tooltips on the page
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+</script>
 
 
                 </div>

@@ -20,7 +20,7 @@
                         <dl class="row text-center">
                             <dt class="col col-md-2 col-sm-6 text-muted"><i class="fa fa-envelope"></i> Email</dt>
                             <dd class="col col-md-2 col-sm-6"><?= $_settings->info('email') ?></dd>
-                            <dt class="col col-md-2 col-sm-6 text-muted"><i class="fa fa-phone"></i> Contact #</dt>
+                            <dt class="col col-md-2 col-sm-6 text-muted"><i class="fa fa-globe"></i> Website</dt>
                             <dd class="col col-md-2 col-sm-6"><?= $_settings->info('contact') ?></dd>
                             <dt class="col col-md-2 col-sm-6 text-muted"><i class="fa fa-map-marked-alt"></i> Location</dt>
                             <dd class="col col-md-2 col-sm-6"><?= $_settings->info('address') ?></dd>

@@ -13,19 +13,19 @@
 <?php 
 if(isset($_GET['id'])){
 
-    $qry = $conn->query("SELECT * FROM curriculum_list where `status` = 1 and id = '{$_GET['id']}' ");
+    $qry = $conn->query("SELECT * FROM research_type WHERE id = '{$_GET['id']}' ");
     if($qry->num_rows > 0){
         foreach($qry->fetch_assoc() as $k => $v){
             if(!is_numeric($k)){
-                $curriculum[$k] = $v;
+                $research_type[$k] = $v;
             }
         }
     }else{
-        echo "<script> alert('Unkown Course ID'); location.replace('./') </script>";
+        echo "<script> alert('Unkown Department ID'); location.replace('./') </script>";
     }
 
 }else{
-    echo "<script> alert('Course ID is required'); location.replace('./') </script>";
+    echo "<script> alert('Department ID is required'); location.replace('./') </script>";
 }
 
 ?>
@@ -33,7 +33,7 @@ if(isset($_GET['id'])){
 <div class="row filters mt-3">
         <div class="col-md-8 col-sm-12">
             <ul class="nav">
-                <li class="nav-item"><a href="?page=projects" class="nav-link text-dark font-weight-bold">All Projects</a></li>
+                    <li class="nav-item"><a href="?page=projects" class="nav-link text-dark font-weight-bold">All Projects</a></li>
                 <li class="nav-item dropdown">
                     <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle <?= isset($page) && $page == 'projects_per_department' ? 'active' : '' ?>" style="color: black; font-weight: 500;">Department</a>
                     <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow droppy">
@@ -62,6 +62,7 @@ if(isset($_GET['id'])){
                         <?php endwhile; ?>
                     </ul>
                 </li>
+
                 <li class="nav-item dropdown">
                     <a id="dropdownSubMenuYear" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle <?= isset($page) && $page == 'projects_per_year' ? 'active' : '' ?>" style="color: black; font-weight: 500;">Year</a>
                     <ul aria-labelledby="dropdownSubMenuYear" class="dropdown-menu border-0 shadow droppy">
@@ -159,8 +160,7 @@ if(isset($_GET['id'])){
     <div class="col-12 mt-3">
         <div class="card card-outline card-success shadow rounded-0">
             <div class="card-body rounded-0">
-                <h2>Archive List of <?= isset($curriculum['name']) ? $curriculum['name'] : "" ?> </h2>
-                <p><small><?= isset($curriculum['description']) ? $curriculum['description'] : "" ?></small></p>
+                <h2>Archive List of <?= isset($research_type['id']) ? $research_type['type'] : "" ?> </h2>
                 <hr class="bg-navy">
                 <?php 
                 $id = isset($_GET['id']) ? $_GET['id'] : '';
@@ -168,26 +168,20 @@ if(isset($_GET['id'])){
                 $page = isset($_GET['p'])? $_GET['p'] : 1; 
                 $offset = 10 * ($page - 1);
                 $paginate = " limit {$limit} offset {$offset}";
-                $wherecid = " and curriculum_id = '{$id}' ";
-                $students = $conn->query("SELECT * FROM `student_list` where id in (SELECT student_id FROM archive_list where `status` = 1 {$wherecid})");
-                $student_arr = array_column($students->fetch_all(MYSQLI_ASSOC),'email','id');
-                $count_all = $conn->query("SELECT * FROM archive_list where `status` = 1 {$wherecid}")->num_rows;    
+                $wheredid = " where type = '{$id}' ";
+                $count_all = $conn->query("SELECT * FROM archive_list {$wheredid} AND status = 1")->num_rows;    
                 $pages = ceil($count_all/$limit);
                 $archives = $conn->query("
-                    SELECT a.*, c.department_id, d.name AS department_name 
+                    SELECT a.*, c.department_id, d.name AS department_name, res.type, res.id
                     FROM archive_list a
                     JOIN curriculum_list c ON a.curriculum_id = c.id
                     JOIN department_list d ON c.department_id = d.id
-                    WHERE a.status = 1 {$wherecid}
-                    AND a.curriculum_id IN (
-                        SELECT id 
-                        FROM curriculum_list 
-                        WHERE department_id = c.department_id
-                    )
-                    ORDER BY UNIX_TIMESTAMP(a.date_created) DESC
+                    JOIN research_type res ON a.type = res.id
+                    WHERE a.status = 1 AND a.type = {$id}
+                    ORDER BY a.views_count DESC, UNIX_TIMESTAMP(a.date_created) DESC
                     {$paginate}
                 ");
-  
+
                 ?>
                 <div class="list-group">
                     <?php 
@@ -236,15 +230,16 @@ if(isset($_GET['id'])){
                         <div class="col-md-6"><span class="text-muted">Display Items: <?= $archives->num_rows ?></span></div>
                         <div class="col-md-6">
                             <ul class="pagination pagination-sm m-0 float-right">
-                                <li class="page-item"><a class="page-link" href="./?page=projects_per_curriculum&id=<?= $id ?>&p=<?= $page - 1 ?>" <?= $page == 1 ? 'disabled' : '' ?>>«</a></li>
+                                <li class="page-item"><a class="page-link" href="./?page=projects_per_type&id=<?= $id ?>&p=<?= $page - 1 ?>" <?= $page == 1 ? 'disabled' : '' ?>>«</a></li>
                                 <?php for($i = 1; $i<= $pages; $i++): ?>
-                                <li class="page-item"><a class="page-link <?= $page == $i ? 'active' : '' ?>" href="./?page=projects_per_curriculum&id=<?= $id ?>&p=<?= $i ?>"><?= $i ?></a></li>
+                                <li class="page-item"><a class="page-link <?= $page == $i ? 'active' : '' ?>" href="./?page=projects_per_type&id=<?= $id ?>&p=<?= $i ?>"><?= $i ?></a></li>
                                 <?php endfor; ?>
-                                <li class="page-item"><a class="page-link" href="./?page=projects_per_curriculum&id=<?= $id ?>&p=<?= $page + 1 ?>" <?= $page == $pages || $pages <= 1 ? 'disabled' : '' ?>>»</a></li>
+                                <li class="page-item"><a class="page-link" href="./?page=projects_per_type&id=<?= $id ?>&p=<?= $page + 1 ?>" <?= $page == $pages || $pages <= 1 ? 'disabled' : '' ?>>»</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>

@@ -22,7 +22,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         width: calc(100%);
     }
 </style>
-<?php if(!isset($_POST['next'])) {?>
+<?php if(!isset($_POST['next']) && $_settings->userdata('type') != 1) {?>
 <div class="content py-4 mx-auto col-12 col-sm-12 col-md-4 col-lg-4">
     <div class="card card-outline card-success shadow rounded">
         <div class="card-header rounded">
@@ -32,7 +32,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <div class="container">
                 <form action="./?page=submit-archive" method="POST">
                     <div class="row">
-                        <select class="form-select mb-3" name="type" id="">
+                        <select class="form-select mb-3" name="type" id="" required>
                             <option value="" selected disabled>Please select type...</option>
                             <option value="1">Projects / Thesis</option>
                             <option value="2">Forms</option>
@@ -46,7 +46,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 </div>
 <?php }?>
 
-<?php if(isset($_POST['next']) && $_POST['type'] == 1) { ?>
+<?php if((isset($_POST['next']) && $_POST['type'] == 1) || $_settings->userdata('type') == 1) { ?>
 <div class="content py-4">
     <div class="card card-outline card-success shadow rounded">
         <div class="card-header rounded">
@@ -67,11 +67,45 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group">
+                                <label for="research_type" class="control-label text-navy">Research Type</label>
+                                <select name="research_type" id="research_type" class="form-control form-control-border" required>
+                                    <option value="" disabled selected>Please Select</option>
+                                    <?php 
+                                    $research_type = $conn->query("SELECT * FROM `research_type` ORDER BY `type` ASC");
+                                    while ($row = $research_type->fetch_assoc()) {
+                                        $row['type'] = ucwords($row['type']);
+                                        echo "<option value='{$row['id']}'>{$row['type']}</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="reference_style" class="control-label text-navy">Reference Style</label>
+                                <select name="reference_style" id="reference_style" class="form-control form-control-border" required>
+                                    <option value="" disabled selected>Please Select</option>
+                                    <?php 
+                                    $reference_style = $conn->query("SELECT * FROM `reference_style`ORDER BY `style` ASC");
+                                    while ($row = $reference_style->fetch_assoc()) {
+                                        $row['style'] = ucwords($row['style']);
+                                        echo "<option value='{$row['id']}'>{$row['style']}</option>";
+                                    } 
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
                                 <label for="year" class="control-label text-navy">Archive Year</label>
                                 <select name="year" id="year" class="form-control form-control-border" required>
                                     <?php
                                     $currentYear = date("Y");
-                                    for ($year = $currentYear; $year >= ($currentYear - 10); $year--) {
+                                    for ($year = $currentYear; $year >= ($currentYear - 20); $year--) {
                                         echo '<option value="' . $year . '"';
                                         if (isset($archive_year) && $archive_year == $year) {
                                             echo ' selected';
@@ -84,7 +118,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-12">
+                        <div class="col-lg-6">
                             <div class="form-group">
                                 <label for="curriculum_id" class="control-label text-navy">Archive Curriculum</label>
                                 <select name="curriculum_id" id="curriculum_id" class="form-control form-control-border" required>
@@ -128,12 +162,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="form-group text-center">
-                                <button class="btn btn-default bg-success btn-flat">Update</button>
+                            <button class="btn btn-default bg-success btn-flat">Submit</button>
                                 <a href="./?page=submit-archive" class="btn btn-light border btn-flat">Cancel</a>
                             </div>
                         </div>
                     </div>
-                </form>
+                </form> 
             </div>
         </div>
     </div>
@@ -150,6 +184,23 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <div class="container-fluid">
                 <form action="" id="form-submit" enctype="multipart/form-data">
                     <input type="hidden" name="id" value="<?= isset($id) ? $id : "" ?>">
+                    <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <span class="text-navy"><small>Department</small></span>
+                                    <select name="department_id" id="department_id" class="form-control form-control-border select2" required>
+                                        <option selected disabled>Choose department...</option>
+                                        <?php 
+                                        $department = $conn->query("SELECT * FROM `department_list` where status = 1 order by `name` asc");
+                                        while($row = $department->fetch_assoc()):
+                                        ?>
+                                        
+                                        <option value="<?= $row['id'] ?>"><?= ucwords($row['name']) ?></option>
+                                        <?php endwhile; ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="form-group">
@@ -169,7 +220,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="form-group text-center">
-                                <button class="btn btn-default bg-success btn-flat">Update</button>
+                                <button class="btn btn-default bg-success btn-flat">Submit</button>
                                 <a href="./?page=submit-archive" class="btn btn-light border btn-flat">Cancel</a>
                             </div>
                         </div>

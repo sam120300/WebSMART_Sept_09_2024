@@ -57,7 +57,7 @@
                                             <span class="sr-only">Toggle Dropdown</span>
                                         </button>
                                         <div class="dropdown-menu" role="menu">
-                                            <a type="button" class="dropdown-item view_details <?php if ($_settings->userdata('type') == 3){ echo "disabled"; } ?>" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" ><span class="fa fa-eye text-dark"></span> View</a>
+                                            <a type="button" class="dropdown-item view_details" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" ><span class="fa fa-eye text-dark"></span> View</a>
                                             <div class="dropdown-divider"></div>
                                             <?php if ($row['status'] != 1): ?>
                                                 <a class="dropdown-item verify_user" href="javascript:void(0)" data-id="<?= $row['id'] ?>" data-name="<?= $row['student_id'] ?>"><span class="fa fa-check text-primary"></span> Verify</a>

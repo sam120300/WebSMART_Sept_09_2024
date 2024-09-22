@@ -241,7 +241,9 @@ while ($row = $top_yearly->fetch_assoc()) {
             background: '#fff',
             foreColor: '#636c81',
             toolbar: {
-                show: false
+                show: true,
+                offsetX: 0,
+                offsetY: 0,
             },
             responsive: [{
                 breakpoint: 768,
@@ -339,7 +341,9 @@ while ($row = $top_yearly->fetch_assoc()) {
             background: '#fff',
             foreColor: '#636c81',
             toolbar: {
-                show: false
+                show: true,
+                offsetX: 0,
+                offsetY: 0,
             },
             responsive: [{
                 breakpoint: 1024,

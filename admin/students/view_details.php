@@ -52,22 +52,22 @@ if (isset($_GET['id'])) {
             <div class="col-md-8">
                 <div class="form-group">
                     <label for="firstname" class="text-navy">First Name:</label>
-                    <input type="text" id="firstname" name="firstname" class="form-control" value="<?= ucwords($firstname) ?>">
+                    <input type="text" id="firstname" name="firstname" class="form-control" value="<?= ucwords($firstname) ?>"<?php if ($_settings->userdata('type') == 3){ echo "disabled"; } ?>>
                 </div>
 
                 <div class="form-group">
                     <label for="middlename" class="text-navy">Middle Name:</label>
-                    <input type="text" id="middlename" name="middlename" class="form-control" value="<?= ucwords($middlename) ?>">
+                    <input type="text" id="middlename" name="middlename" class="form-control" value="<?= ucwords($middlename) ?>" <?php if ($_settings->userdata('type') == 3){ echo "disabled"; } ?>>
                 </div>
 
                 <div class="form-group">
                     <label for="lastname" class="text-navy">Last Name:</label>
-                    <input type="text" id="lastname" name="lastname" class="form-control" value="<?= ucwords($lastname) ?>">
+                    <input type="text" id="lastname" name="lastname" class="form-control" value="<?= ucwords($lastname) ?>" <?php if ($_settings->userdata('type') == 3){ echo "disabled"; } ?>>
                 </div>
 
                 <div class="form-group">
                     <label for="gender" class="text-navy">Gender:</label>
-                    <select id="gender" name="gender" class="form-control">
+                    <select id="gender" name="gender" class="form-control" <?php if ($_settings->userdata('type') == 3){ echo "disabled"; } ?>>
                         <option value="Male" <?= $gender == 'Male' ? 'selected' : '' ?>>Male</option>
                         <option value="Female" <?= $gender == 'Female' ? 'selected' : '' ?>>Female</option>
                     </select>
@@ -75,17 +75,17 @@ if (isset($_GET['id'])) {
 
                 <div class="form-group">
                     <label for="student_id" class="text-navy">Student ID:</label>
-                    <input type="text" id="student_id" name="student_id" class="form-control" value="<?= $student_id ?>">
+                    <input type="text" id="student_id" name="student_id" class="form-control" value="<?= $student_id ?>" <?php if ($_settings->userdata('type') == 3){ echo "disabled"; } ?>>
                 </div>
 
                 <div class="form-group">
                     <label for="password" class="text-navy">Password:</label>
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter new password (leave blank to keep current)">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter new password (leave blank to keep current)" <?php if ($_settings->userdata('type') == 3){ echo "disabled"; } ?>>
                 </div>
 
                 <div class="form-group">
                     <label for="department" class="text-navy">Department:</label>
-                    <select id="department" name="department" class="form-control">
+                    <select id="department" name="department" class="form-control" <?php if ($_settings->userdata('type') == 3){ echo "disabled"; } ?>>
                         <?php while ($row = $departments_qry->fetch_assoc()): ?>
                             <option value="<?= $row['id'] ?>" <?= $department_id == $row['id'] ? 'selected' : '' ?>><?= ucwords($row['name']) ?></option>
                         <?php endwhile; ?>
@@ -94,7 +94,7 @@ if (isset($_GET['id'])) {
 
                 <div class="form-group">
                     <label for="curriculum" class="text-navy">Curriculum:</label>
-                    <select id="curriculum" name="curriculum" class="form-control">
+                    <select id="curriculum" name="curriculum" class="form-control" <?php if ($_settings->userdata('type') == 3){ echo "disabled"; } ?>>
                         <?php while ($row = $curriculums_qry->fetch_assoc()): ?>
                             <option value="<?= $row['id'] ?>" <?= $curriculum_id == $row['id'] ? 'selected' : '' ?>><?= ucwords($row['name']) ?></option>
                         <?php endwhile; ?>
@@ -103,14 +103,14 @@ if (isset($_GET['id'])) {
 
                 <div class="form-group">
                     <label for="status" class="text-navy">Status:</label>
-                    <select id="status" name="status" class="form-control">
+                    <select id="status" name="status" class="form-control" <?php if ($_settings->userdata('type') == 3){ echo "disabled"; } ?>>
                         <option value="1" <?= $status == 1 ? 'selected' : '' ?>>Verified</option>
                         <option value="0" <?= $status == 0 ? 'selected' : '' ?>>Not Verified</option>
                     </select>
                 </div>
 
                 <div class="form-group text-right">
-                    <button type="submit" class="btn btn-success">Save Changes</button>
+                    <button type="submit" class="btn btn-success" <?php if ($_settings->userdata('type') == 3){ echo "disabled"; } ?>>Save Changes</button>
                     <button class="btn btn-dark" data-dismiss="modal" type="button">Close</button>
                 </div>
             </div>
